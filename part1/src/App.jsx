@@ -1,16 +1,26 @@
 import { useState } from 'react'
 
-const Statistics = (props) => (
-  <div>
-    <h2>statistics</h2>
-    <p>good {props.good}</p>
-    <p>neutral {props.neutral}</p>
-    <p>bad {props.bad}</p>
-    <p>all {props.click}</p>
-    <p>average {props.average/props.click}</p>
-    <p>positive {(props.good/props.click)*100}%</p>
-  </div>
-)
+const Statistics = (props) => {
+  if (props.click === 0) {
+    return (
+      <div>
+        <p>No feedback given</p>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <h2>statistics</h2>
+        <p>good {props.good}</p>
+        <p>neutral {props.neutral}</p>
+        <p>bad {props.bad}</p>
+        <p>all {props.click}</p>
+        <p>average {props.average/props.click}</p>
+        <p>positive {(props.good/props.click)*100}%</p>
+      </div>
+    )
+  }
+}
 
 const App = () => {
   const [good, setGood] = useState(0)
