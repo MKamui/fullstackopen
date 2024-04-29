@@ -1,76 +1,32 @@
 import { useState } from 'react'
 
-const Statistics = (props) => {
-  if (props.click === 0) {
-    return (
-      <div>
-        <p>No feedback given</p>
-      </div>
-    )
-  } else {
-    return (
-      <div>
-        <h2>statistics</h2>
-        <table>
-          <tbody>
-            <StatisticLine text="good:" value={props.good}/>
-            <StatisticLine text="neutral:" value={props.neutral} />
-            <StatisticLine text="bad:" value={props.bad} />
-            <StatisticLine text="all:" value={props.click} />
-            <StatisticLine text="average:" value={props.average/props.click} />
-            <StatisticLine text="positive:" value={(props.good/props.click)*100 + "%"} />
-          </tbody>
-        </table>
-      </div>
-    )
-  }
-}
-
-const Button = (props) => (
-  <button onClick={() => props.function()}>
-    {props.text}
-  </button>
-)
-
-const StatisticLine = (props) => (
-  <tr><th>{props.text}</th><th>{props.value}</th></tr>
-)
-
 const App = () => {
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-  const [click, setClick] = useState(0)
-  const [average, setAverage] = useState(0)
+  const anecdotes = [
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'The only way to go fast, is to go well.'
+  ]
 
-  const handleGood = () => {
-    setGood(good + 1)
-    setClick(click + 1)
-    setAverage(average + 1)
-  }
+  const [selected, setSelected] = useState(0)
 
-  const handleNeutral = () => {
-    setNeutral(neutral + 1)
-    setClick(click + 1)
-  }
-
-  const handleBad = () => {
-    setBad(bad + 1)
-    setClick(click + 1)
-    setAverage(average - 1)
+  const handleRandom = () => {
+    const randomAnecdote = Math.floor(Math.random() * anecdotes.length)
+    setSelected(randomAnecdote)
   }
 
   return (
     <div>
-      <div>
-        <h1>Give Feedback</h1>
-        <div>
-          <Button function={handleGood} text="good"/>
-          <Button function={handleNeutral} text="neutral"/>
-          <Button function={handleBad} text="bad"/>
-        </div>
-      </div>
-      <Statistics good={good} neutral={neutral} bad={bad} click={click} average={average}/>
+      <button onClick={() => handleRandom()}>
+        Random Anecdote
+      </button>
+      <p>
+        {anecdotes[selected]}
+      </p>
     </div>
   )
 }
