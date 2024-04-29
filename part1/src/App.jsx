@@ -16,6 +16,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(votes)
+  const [most, setMost] = useState(false)
 
   const handleRandom = () => {
     const randomAnecdote = Math.floor(Math.random() * anecdotes.length)
@@ -26,7 +27,11 @@ const App = () => {
     const newVotes = [...points]
     newVotes[selected] += 1
     setPoints(newVotes)
+    const maxVotes = newVotes.indexOf(Math.max(...newVotes))
+    setMost(maxVotes)
   }
+
+  
 
   return (
     <div>
@@ -42,6 +47,8 @@ const App = () => {
       <button onClick={() => handleRandom()}>
         Next anecdote
       </button>
+      <p>Anecdote with most votes</p>
+      <p>{most === false ? "No votes yet" : anecdotes[most]}</p>
     </div>
   )
 }
