@@ -14,9 +14,8 @@ const App = () => {
     axios.get('http://localhost:3001/persons')
     .then(response => {
       setPersons(response.data)
-      console.log("users rdy")
     })
-  }, [])
+  }, [persons])
   
 
   const handleFilter = (event) => {
@@ -40,7 +39,10 @@ const App = () => {
     }
     persons.find(p => p.name === newName) ? 
     alert(`${newName} is already added to phonebook`) 
-    : setPersons(persons.concat(newPerson))
+    : axios.post("http://localhost:3001/persons", newPerson) 
+    .then(response => {
+      console.log("person added")
+    })
     setNewName('')
     setNewNumber('')
   }
