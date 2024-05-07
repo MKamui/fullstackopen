@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import Form from './components/Form'
-import axios from 'axios'
+import personsService from "./services/persons"
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -11,9 +11,9 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-    .then(response => {
-      setPersons(response.data)
+    personsService.getAllPersons()
+    .then(listPersons => {
+      setPersons(listPersons)
     })
   }, [persons])
   
@@ -35,16 +35,20 @@ const App = () => {
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
     }
     persons.find(p => p.name === newName) ? 
     alert(`${newName} is already added to phonebook`) 
-    : axios.post("http://localhost:3001/persons", newPerson) 
-    .then(response => {
-      console.log("person added")
-    })
+    :  personsService.createNewPerson(newPerson)
     setNewName('')
     setNewNumber('')
+  }
+
+  const handleErase = (id) => {
+    if (window.confirm(`Do you want to delete ${persons.find(p => p.id === id).name}?`)) {
+      personsService.deletePerson(id)
+      const newPersons = persons.filter(p => p.id !== id)
+      setPersons(newPersons)
+    }
   }
 
   return (
@@ -56,7 +60,7 @@ const App = () => {
       <Form handleInputName={handleInputName} handleInputNumber={handleInputNumber} handleNewName={handleNewName} newName={newName} newNumber={newNumber}/>
       <h3>Numbers</h3>
       <div>
-        <Persons persons={persons} filter={filter}/>
+        <Persons persons={persons} filter={filter} erase={handleErase}/>
       </div>
     </div>
   )
