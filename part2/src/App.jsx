@@ -10,7 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [message, setMessage] =useState(null)
+  const [message, setMessage] = useState(null)
+  const [type, setType] = useState()
 
   useEffect(() => {
     personsService.getAllPersons()
@@ -38,19 +39,29 @@ const App = () => {
       name: newName,
       number: newNumber,
     }
-    if (persons.find(p => p.name === newName) && window.confirm(`${newName} is already added to phonebook, update the phonenumber?`)) {
-      personsService.updatePerson(persons.find(p => p.name === newName).id, newPerson)
-      setNewName('')
-      setNewNumber('')
-      setMessage(`Updated ${newName}`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000);
-    } else {
-      personsService.createNewPerson(newPerson)
-      setNewName('')
-      setNewNumber('')
-      setMessage(`Added ${newName}`)
+    try {
+      if (persons.find(p => p.name === newName) && window.confirm(`${newName} is already added to phonebook, update the phonenumber?`)) {
+        personsService.updatePerson(persons.find(p => p.name === newName).id, newPerson)
+        setNewName('')
+        setNewNumber('')
+        setType("success")
+        setMessage(`Updated ${newName}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000);
+      } else {
+        personsService.createNewPerson(newPerson)
+        setNewName('')
+        setNewNumber('')
+        setType("success")
+        setMessage(`Added ${newName}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000);
+      }
+    } catch (error) {
+      setType("error")
+      setMessage(`Something happens trying to create or update ${newName}`)
       setTimeout(() => {
         setMessage(null)
       }, 5000);
@@ -58,17 +69,30 @@ const App = () => {
   }
 
   const handleErase = (id) => {
-    if (window.confirm(`Do you want to delete ${persons.find(p => p.id === id).name}?`)) {
-      personsService.deletePerson(id)
-      const newPersons = persons.filter(p => p.id !== id)
-      setPersons(newPersons)
+    try {
+      if (window.confirm(`Do you want to delete ${persons.find(p => p.id === id).name}?`)) {
+        personsService.deletePerson(id)
+        const newPersons = persons.filter(p => p.id !== id)
+        setPersons(newPersons)
+        setType("success")
+        setMessage(`Deleted ${persons.find(p => p.id === id).name}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000);
+      }
+    } catch (error) {
+      setType("error")
+      setMessage(`Something happens trying to delete ${persons.find(p => p.id === id).name}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000);
     }
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={message}/>
+      <Notification message={message} type={type}/>
       <div>
         <Filter handleFilter={handleFilter}/>
       </div>
