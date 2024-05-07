@@ -3,12 +3,14 @@ import Persons from './components/Persons'
 import Filter from './components/Filter'
 import Form from './components/Form'
 import personsService from "./services/persons"
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [message, setMessage] =useState(null)
 
   useEffect(() => {
     personsService.getAllPersons()
@@ -36,12 +38,23 @@ const App = () => {
       name: newName,
       number: newNumber,
     }
-    persons.find(p => p.name === newName) && window.confirm(`${newName} is already added to phonebook, update the phonenumber?`) ?
-        personsService.updatePerson(persons.find(p => p.name === newName).id, newPerson)
-        : 
-        personsService.createNewPerson(newPerson)
-        setNewName('')
-        setNewNumber('')
+    if (persons.find(p => p.name === newName) && window.confirm(`${newName} is already added to phonebook, update the phonenumber?`)) {
+      personsService.updatePerson(persons.find(p => p.name === newName).id, newPerson)
+      setNewName('')
+      setNewNumber('')
+      setMessage(`Updated ${newName}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000);
+    } else {
+      personsService.createNewPerson(newPerson)
+      setNewName('')
+      setNewNumber('')
+      setMessage(`Added ${newName}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000);
+    }
   }
 
   const handleErase = (id) => {
@@ -54,12 +67,13 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={message}/>
       <div>
         <Filter handleFilter={handleFilter}/>
       </div>
       <Form handleInputName={handleInputName} handleInputNumber={handleInputNumber} handleNewName={handleNewName} newName={newName} newNumber={newNumber}/>
-      <h3>Numbers</h3>
+      <h2>Numbers</h2>
       <div>
         <Persons persons={persons} filter={filter} erase={handleErase}/>
       </div>
