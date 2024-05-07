@@ -36,11 +36,12 @@ const App = () => {
       name: newName,
       number: newNumber,
     }
-    persons.find(p => p.name === newName) ? 
-    alert(`${newName} is already added to phonebook`) 
-    :  personsService.createNewPerson(newPerson)
-    setNewName('')
-    setNewNumber('')
+    persons.find(p => p.name === newName) && window.confirm(`${newName} is already added to phonebook, update the phonenumber?`) ?
+        personsService.updatePerson(persons.find(p => p.name === newName).id, newPerson)
+        : 
+        personsService.createNewPerson(newPerson)
+        setNewName('')
+        setNewNumber('')
   }
 
   const handleErase = (id) => {
