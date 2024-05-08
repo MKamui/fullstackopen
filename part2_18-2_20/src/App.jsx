@@ -33,6 +33,10 @@ const App = () => {
   const handleFilter = (event) => {
     setSearch(event.target.value)
   }
+
+  const handleShow = (name) => {
+    setFiltered(dataCountries.filter(n => n.name.common.toLowerCase().includes(name.toLowerCase())))
+  }
   
   return (
     <div className='find'>
@@ -44,7 +48,7 @@ const App = () => {
           <p>Write something on the search bar</p>
         </div>
         :
-        <CountrySelected filtered={filtered}/>
+        <CountrySelected filtered={filtered} show={handleShow}/>
         }
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CountrySelected = ({filtered}) => {
+const CountrySelected = ({filtered, show}) => {
     if (filtered) {
         if(filtered.length > 10){
             return (
@@ -12,7 +12,7 @@ const CountrySelected = ({filtered}) => {
             return(
                 filtered.map((c => (
                     <div key={c.name.common}>
-                        <p>{c.name.common}</p>
+                        <p>{c.name.common} <button onClick={() => show(c.name.common)}>show</button></p>
                     </div>
                 )))
             )
