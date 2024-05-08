@@ -27,7 +27,7 @@ const CountrySelected = ({filtered, show}) => {
                             <li key={key}>{filtered[0].languages[key]}</li>
                         ))}
                     </p>
-                    <img src={filtered[0].flags.png}/>  
+                    <img src={filtered[0].flags.png}/>
                 </div>
             )
         }
