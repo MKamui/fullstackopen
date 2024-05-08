@@ -1,0 +1,7 @@
+.find{
+    flex-direction: row;
+}
+
+input {
+    margin-left: 10px;
+}
