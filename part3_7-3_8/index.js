@@ -26,9 +26,13 @@ let persons = [
 ]
 
 app.use(express.json())
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+// app.use(morgan('tiny'))
+morgan.token('person', function (req, res) {
+  return `${JSON.stringify(req.body)}`
+})
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'))
 
-  app.get('/api/persons', (request, response, next) => {
+  app.get('/api/persons', (request, response) => {
     response.json(persons)
   })
 
@@ -60,7 +64,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
     return random
   }
   
-  app.post('/api/persons', (request, response) => {
+  app.post('/api/persons', (request, response, next) => {
     const body = request.body 
   
     if (!body.name) {
