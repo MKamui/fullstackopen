@@ -12,24 +12,28 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [message, setMessage] = useState(null)
   const [type, setType] = useState()
+  const [update, setUpdate] = useState()
 
   useEffect(() => {
     personsService.getAllPersons()
     .then(listPersons => {
       setPersons(listPersons)
     })
-  }, [persons])
+  }, [, update])
   
 
   const handleFilter = (event) => {
+    event.preventDefault()
     setFilter(event.target.value)
   }
 
   const handleInputName = (event) => {
+    event.preventDefault()
     setNewName(event.target.value)
   }
 
   const handleInputNumber = (event) => {
+    event.preventDefault()
     setNewNumber(event.target.value)
   }
 
@@ -51,6 +55,7 @@ const App = () => {
         }, 5000);
       } else {
         personsService.createNewPerson(newPerson)
+        setUpdate('created')
         setNewName('')
         setNewNumber('')
         setType("success")
@@ -72,8 +77,7 @@ const App = () => {
     try {
       if (window.confirm(`Do you want to delete ${persons.find(p => p.id === id).name}?`)) {
         personsService.deletePerson(id)
-        const newPersons = persons.filter(p => p.id !== id)
-        setPersons(newPersons)
+        setUpdate('updated')
         setType("success")
         setMessage(`Deleted ${persons.find(p => p.id === id).name}`)
         setTimeout(() => {
